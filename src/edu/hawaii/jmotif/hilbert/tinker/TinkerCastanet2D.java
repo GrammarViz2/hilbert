@@ -30,19 +30,8 @@ import com.google.uzaygezen.core.CompactHilbertCurve;
 
 public class TinkerCastanet2D {
 
-  // define map default size
-  private final static double MERCATOR_RANGE = 256.;
-
   // define default zoom level
   private final static double ZOOM_LEVEL = 11.;
-
-  // map's center
-  private final static double ORIGIN_X = MERCATOR_RANGE / 2;
-  private final static double ORIGIN_Y = MERCATOR_RANGE / 2;
-
-  // this is how we count
-  private final static double PIXELS_PER_LON_DEGREE = MERCATOR_RANGE / 360D;
-  private final static double PIXELS_PER_LON_RADIAN = MERCATOR_RANGE / (2D * Math.PI);
 
   private static final int HILBERT_CURVE_LEVEL = 8;
 
@@ -62,7 +51,7 @@ public class TinkerCastanet2D {
   private static final String PATH_FILENAME = "data/castanet/processed/11_2_2013_bike_hrm_smoothed.csv";
 
   private static final String OUTPUT_PREFIX = "data/castanet/hrm_2D";
-  
+
   // the global variable which keeps the resulting from transform timeseries
   private static ArrayList<Double> hilbertTS;
 
@@ -70,7 +59,7 @@ public class TinkerCastanet2D {
 
     BufferedImage staticMap = getStaticMap();
 
-    ArrayList<Point2D> runningPath = getRunningPath();
+    ArrayList<Point2D.Double> runningPath = getRunningPath();
 
     // center point of the generated map
     //
@@ -78,7 +67,7 @@ public class TinkerCastanet2D {
 
     // and its location on 256x256 mercator map
     //
-    Point2D staticMapCentercenter = fromLatLngToPoint(staticMapCenterLatLng);
+    Point2D staticMapCentercenter = MercatorFactory.fromLatLngToPoint(staticMapCenterLatLng);
 
     // subtract half of the map - arrive at the left top corner
     //
@@ -87,7 +76,6 @@ public class TinkerCastanet2D {
         / Math.pow(2, ZOOM_LEVEL));
 
     // hilbert TS construction
-    // here I am relying on the uzaygezen implementation
     //
     hilbertTS = new ArrayList<Double>();
     CompactHilbertCurve chc = new CompactHilbertCurve(new int[] { HILBERT_CURVE_LEVEL,
@@ -98,9 +86,9 @@ public class TinkerCastanet2D {
     Graphics graphics = staticMap.getGraphics();
     graphics.setColor(GPX_PATH_COLOR);
 
-    for (Point2D p : runningPath) {
+    for (Point2D.Double p : runningPath) {
       // current LatLNg point to X,Y coordinates of 256px MERCATOR map
-      Point2D point = fromLatLngToPoint(p);
+      Point2D point = MercatorFactory.fromLatLngToPoint(p);
       // adjust X and Y according to the current ZOOM level
       double x = (point.getX() - leftTop.getX()) * Math.pow(2, ZOOM_LEVEL);
       double y = (point.getY() - leftTop.getY()) * Math.pow(2, ZOOM_LEVEL);
@@ -179,12 +167,13 @@ public class TinkerCastanet2D {
     bw.close();
   }
 
-  private static ArrayList<Point2D> getRunningPath() throws NumberFormatException, IOException {
+  private static ArrayList<Point2D.Double> getRunningPath() throws NumberFormatException,
+      IOException {
     // load coordinates from CSV
     //
     // lat,lon,time,hrm,kph,bearing,km
     //
-    ArrayList<Point2D> points = new ArrayList<>();
+    ArrayList<Point2D.Double> points = new ArrayList<>();
     BufferedReader br = new BufferedReader(new FileReader(new File(PATH_FILENAME)));
     String line = br.readLine();
     while ((line = br.readLine()) != null) {
@@ -199,71 +188,10 @@ public class TinkerCastanet2D {
   }
 
   private static BufferedImage getStaticMap() throws IOException {
-    // this is how I've got that map
-    //
     // http://maps.googleapis.com/maps/api/staticmap?center=43.5185871277,1.5191950798&zoom=15&size=500x500&sensor=false
-    //
-    // load it from a file
-    //
     BufferedImage img = ImageIO.read(new File(STATIC_MAP_FILENAME));
-
     return img;
   }
-
-  /**
-   * Degres to radians conversion.
-   * 
-   * @param deg the input - degree.
-   * @return the output - radians.
-   */
-  private static double degreesToRadians(double deg) {
-    return deg * (Math.PI / 180);
-  }
-
-  /**
-   * Radians to degree conversion.
-   * 
-   * @param rad the input - radians.
-   * @return the output - degrees.
-   */
-  private static double radiansToDegrees(double rad) {
-    return rad / (Math.PI / 180);
-  }
-
-  /**
-   * Converts the Lat Lng point to the pixel X/Y coordinates of 256 pixels MERCATOR MAP.
-   * 
-   * @param latlng the lat/lng point.
-   * 
-   * @return XY point ready to be set.
-   */
-  private static Point2D fromLatLngToPoint(Point2D latlng) {
-
-    // X coordinate
-    double x = ORIGIN_X + latlng.getY() * PIXELS_PER_LON_DEGREE;
-
-    // Y coordinate
-    double siny = Math.sin(degreesToRadians(latlng.getX()));
-    double y = ORIGIN_Y + 0.5 * Math.log((1 + siny) / (1 - siny)) * (-PIXELS_PER_LON_RADIAN);
-
-    // result
-    return new Point2D.Double(x, y);
-  };
-
-  /**
-   * The inverse, XY to LatLng conversion.
-   * 
-   * @param point the 256px MERCATOR map point
-   * 
-   * @return the LatLng point.
-   */
-  @SuppressWarnings("unused")
-  private static Point2D fromPointToLatLng(Point2D point) {
-    double lng = (point.getX() - ORIGIN_X) / PIXELS_PER_LON_DEGREE;
-    double latRadians = (point.getY() - ORIGIN_Y) / (-PIXELS_PER_LON_RADIAN);
-    double lat = radiansToDegrees(2 * Math.atan(Math.exp(latRadians)) - Math.PI / 2);
-    return new Point2D.Double(lat, lng);
-  };
 
   private static void HilbertA(int level, Path2D path, double dist) {
     if (level > 0) {
@@ -311,15 +239,6 @@ public class TinkerCastanet2D {
       path.lineTo(path.getCurrentPoint().getX(), path.getCurrentPoint().getY() + dist);
       HilbertB(level - 1, path, dist);
     }
-  }
-
-  /**
-   * Get the GPX path as a list of Hilbert cell indexes.
-   * 
-   * @return GPX path as Hilbert timeseries whose values are Hilbert cell indexes.
-   */
-  public ArrayList<Double> getHilbertTS() {
-    return this.hilbertTS;
   }
 
 }
