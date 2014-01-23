@@ -59,10 +59,10 @@ public class TinkerCastanet3D {
   // cornflowerblue
   private static final Color GPX_PATH_COLOR = new Color(255, 64, 64);
 
-  private static final String STATIC_MAP_FILENAME = "data/castanet/staticmap-hrm.png";
+  private static final String STATIC_MAP_FILENAME = "data/castanet/maps/staticmap-hrm.png";
 
   // private static final String PATH_FILENAME = "data/castanet/11_2_2013_bike_hrm.csv";
-  private static final String PATH_FILENAME = "data/castanet/11_2_2013_bike_hrm_smoothed.csv";
+  private static final String PATH_FILENAME = "data/castanet/processed/11_2_2013_bike_hrm_smoothed.csv";
 
   private static final String OUTPUT_PREFIX = "data/castanet/hrm_3D";
 

@@ -1,0 +1,24 @@
+#
+# FILE LAYOUT DEFINITIIONS:
+#
+# gpsbabel -i gpx -f /media/FC73-BC65/parts1.gpx -x interpolate,time=1 -x track,speed,course -o gpx -F 12_6_2013_bike_turns.gpx
+# gpsbabel -i gpx -f 12_6_2013_bike_turns.gpx -x track,speed,course -o xcsv,style=seninp.style -F 11_2_2013_bike_hrm.csv
+# cat 12_6_2013_bike_turns.gpx | grep "course" | sed 's/<course>//g' | sed 's/<\/course>//g' | sed 's/ //g' > 11_2_2013_bike_hrm.course
+#
+FIELD_DELIMITER ,
+RECORD_DELIMITER NEWLINE
+BADCHARS ,"
+
+#
+# INDIVIDUAL DATA FIELDS, IN ORDER OF APPEARANCE:
+# NOTE: MS S&T ONLY IMPORTS DATA, IT DOESN'T 
+# EXPORT THIS ANYWHERE SO WE CAN HAVE OUR 
+# WAY WITH THE FORMATTING. 
+#
+IFIELD LAT_DECIMAL, "", "%f" # Latitude
+IFIELD LON_DECIMAL, "", "%f" # Longitude
+IFIELD GMT_TIME,"","%Y/%m/%d %H:%M:%S"
+IFIELD HEART_RATE,"","%d"
+IFIELD PATH_SPEED_KPH,"","%.1f"
+IFILED PATH_COURSE,"","%f"
+IFIELD PATH_DISTANCE_KM,"","%f"
