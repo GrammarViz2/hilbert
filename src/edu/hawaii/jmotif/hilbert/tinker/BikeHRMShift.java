@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -26,28 +27,37 @@ import com.google.uzaygezen.core.BitVector;
 import com.google.uzaygezen.core.BitVectorFactories;
 import com.google.uzaygezen.core.CompactHilbertCurve;
 
-public class BikeHRMRotate {
+public class BikeHRMShift {
 
   // *** the Google static map and parameters
   //
-  // http://maps.googleapis.com/maps/api/staticmap?center=43.4485871277,1.5991950798&zoom=11&size=640x640&sensor=false
+  // http://maps.googleapis.com/maps/api/staticmap?center=43.4485871277,1.5991950798&zoom=10&size=640x640&sensor=false
   //
-  private static final String STATIC_MAP_FILENAME = "data/castanet/maps/staticmap-hrm.png";
+  private static final String STATIC_MAP_FILENAME = "data/castanet/maps/staticmap-hrm-small.png";
+  //
+  // define map width
+  private final static double MAP_WIDTH = 640.;
   //
   // define the center point
   private final static Point2D.Double MAP_CENTER_LATLNG = new Point2D.Double(43.4485871277,
       1.5991950798);
   //
   // define zoom level
-  private final static double ZOOM_LEVEL = 11.;
+  private final static double ZOOM_LEVEL = 10.;
+
+  // the PATH curve top left charting corner
 
   // *** the Hilbert curve parameters
   //
   // define Hilbert curve size
-  private static final double HILBERT_CURVE_SIZE = 639.;
+  private static final double HILBERT_CURVE_SIZE = 300.;
   //
   // define the curve level
-  private static final int HILBERT_CURVE_LEVEL = 8;
+  private static final int HILBERT_CURVE_LEVEL = 7;
+  //
+  // define the placement offsets
+  private static final int HILBERT_OFFSET_X = 200;
+  private static final int HILBERT_OFFSET_Y = 200;
 
   // *** output figure parameters
   //
@@ -64,7 +74,7 @@ public class BikeHRMRotate {
   //
   private static final String INPUT_TRACK = "data/castanet/processed/11_2_2013_bike_hrm_smoothed.csv";
   //
-  private static final String OUT_PREFIX = "data/castanet/work/bike_hrm_right2_";
+  private static final String OUT_PREFIX = "data/castanet/work/bike_hrm_200_300_";
 
   // global variable for Hilbert curves data
   //
@@ -89,11 +99,17 @@ public class BikeHRMRotate {
     //
     Point2D staticMapCentercenter = MercatorFactory.fromLatLngToPoint(MAP_CENTER_LATLNG);
 
-    // the charting cornere
+    // the PATH curve top left charting corner
     //
-    Point2D leftTop = new Point2D.Double(staticMapCentercenter.getX() - (HILBERT_CURVE_SIZE / 2.)
-        / Math.pow(2, ZOOM_LEVEL), staticMapCentercenter.getY() - (HILBERT_CURVE_SIZE / 2.)
+    Point2D pathLeftTop = new Point2D.Double(staticMapCentercenter.getX() - (MAP_WIDTH / 2.)
+        / Math.pow(2, ZOOM_LEVEL), staticMapCentercenter.getY() - (MAP_WIDTH / 2.)
         / Math.pow(2, ZOOM_LEVEL));
+
+    // the Hilbert curve top left charting corner
+    //
+    Point2D hilbertLeftTop = new Point2D.Double(staticMapCentercenter.getX()
+        - (HILBERT_CURVE_SIZE / 2.) / Math.pow(2, ZOOM_LEVEL), staticMapCentercenter.getY()
+        - (HILBERT_CURVE_SIZE / 2.) / Math.pow(2, ZOOM_LEVEL));
 
     // hilbert TS construction, here I am relying on the uzaygezen implementation
     //
@@ -114,34 +130,24 @@ public class BikeHRMRotate {
       Point2D point = MercatorFactory.fromLatLngToPoint(p);
 
       // adjust X and Y according to the current ZOOM level
-      double xO = (point.getX() - leftTop.getX()) * Math.pow(2, ZOOM_LEVEL);
-      double yO = (point.getY() - leftTop.getY()) * Math.pow(2, ZOOM_LEVEL);
+      double mapX = (point.getX() - pathLeftTop.getX()) * Math.pow(2, ZOOM_LEVEL);
+      double mapY = (point.getY() - pathLeftTop.getY()) * Math.pow(2, ZOOM_LEVEL);
 
-      // apply no transform
-      // double x = noTransform(xO);
-      // double y = noTransform(yO);
-
-      // rotate right
-      // double x = negate(yO, HILBERT_CURVE_SIZE);
-      // double y = noTransform(xO);
-
-      // rotate right X2
-      double x = negate(xO, HILBERT_CURVE_SIZE);
-      double y = negate(yO, HILBERT_CURVE_SIZE);
-
-      // rotate right X3
-      // double x = noTransform(yO);
-      // double y = negate(xO, HILBERT_CURVE_SIZE);
+      // adjust X and Y according to the current ZOOM level
+      double hilbertX = (point.getX() - hilbertLeftTop.getX()) * Math.pow(2, ZOOM_LEVEL);
+      double hilbertY = (point.getY() - hilbertLeftTop.getY()) * Math.pow(2, ZOOM_LEVEL);
 
       // convert X to the hilbert cell index
       //
-      long xx = (long) Math.floor(x / (HILBERT_CURVE_SIZE / Math.pow(2., HILBERT_CURVE_LEVEL)));
+      long xx = (long) Math.floor(hilbertX
+          / (HILBERT_CURVE_SIZE / Math.pow(2., HILBERT_CURVE_LEVEL)));
       BitVector vector1 = BitVectorFactories.OPTIMAL.apply(HILBERT_CURVE_LEVEL);
       vector1.copyFrom(xx);
 
       // convert Y to the hilbert cell index
       //
-      long yy = (long) Math.floor(y / (HILBERT_CURVE_SIZE / Math.pow(2., HILBERT_CURVE_LEVEL)));
+      long yy = (long) Math.floor(hilbertY
+          / (HILBERT_CURVE_SIZE / Math.pow(2., HILBERT_CURVE_LEVEL)));
       BitVector vector2 = BitVectorFactories.OPTIMAL.apply(HILBERT_CURVE_LEVEL);
       vector2.copyFrom(yy);
 
@@ -158,7 +164,7 @@ public class BikeHRMRotate {
 
       // highlight the point on the map
       //
-      Shape theCircle = new Ellipse2D.Double(x - GPX_POINT_RADIUS, y - GPX_POINT_RADIUS,
+      Shape theCircle = new Ellipse2D.Double(mapX - GPX_POINT_RADIUS, mapY - GPX_POINT_RADIUS,
           2.0 * GPX_POINT_RADIUS, 2.0 * GPX_POINT_RADIUS);
       ((Graphics2D) graphics).draw(theCircle);
     }
@@ -180,6 +186,9 @@ public class BikeHRMRotate {
     hilbertPath.moveTo(dist / 2, dist / 2);
     HilbertA(HILBERT_CURVE_LEVEL, hilbertPath, dist); // start recursion
     graphics.setColor(HILBERT_CURVE_COLOR);
+    // place the hilbert curve according to offsets
+    hilbertPath.transform(new AffineTransform(1., 0., 0., 1., HILBERT_OFFSET_X, HILBERT_OFFSET_Y));
+    // draw it
     ((Graphics2D) graphics).draw(hilbertPath);
     graphics.dispose();
 
@@ -188,10 +197,6 @@ public class BikeHRMRotate {
     ImageIO.write(staticMap, "png", new File(OUT_PREFIX + "_map_and_hilbert.png"));
 
     makeAtimeseriesPlot(hilbertCurveResult);
-  }
-
-  private static double negate(double x, double width) {
-    return width - x;
   }
 
   /**
@@ -238,10 +243,6 @@ public class BikeHRMRotate {
       bw.write(i + "," + hilbertCurveResult.get(i) + "\n");
     }
     bw.close();
-  }
-
-  private static double noTransform(double x) {
-    return x;
   }
 
   private static void HilbertA(int level, Path2D path, double dist) {
