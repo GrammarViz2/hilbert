@@ -26,7 +26,7 @@ import com.google.uzaygezen.core.BitVector;
 import com.google.uzaygezen.core.BitVectorFactories;
 import com.google.uzaygezen.core.CompactHilbertCurve;
 
-public class BikeHRMRotate {
+public class Bike2D_HRM_Rotate {
 
   // *** the Google static map and parameters
   //

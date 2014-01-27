@@ -27,7 +27,7 @@ import com.google.uzaygezen.core.BitVector;
 import com.google.uzaygezen.core.BitVectorFactories;
 import com.google.uzaygezen.core.CompactHilbertCurve;
 
-public class BikeHRMShift {
+public class Bike2D_HRMShift {
 
   // *** the Google static map and parameters
   //
@@ -50,14 +50,14 @@ public class BikeHRMShift {
   // *** the Hilbert curve parameters
   //
   // define Hilbert curve size
-  private static final double HILBERT_CURVE_SIZE = 300.;
+  private static final double HILBERT_CURVE_SIZE = 400.;
   //
   // define the curve level
   private static final int HILBERT_CURVE_LEVEL = 7;
   //
   // define the placement offsets
-  private static final int HILBERT_OFFSET_X = 200;
-  private static final int HILBERT_OFFSET_Y = 200;
+  private static final int HILBERT_OFFSET_X = 50;
+  private static final int HILBERT_OFFSET_Y = 50;
 
   // *** output figure parameters
   //
@@ -74,7 +74,7 @@ public class BikeHRMShift {
   //
   private static final String INPUT_TRACK = "data/castanet/processed/11_2_2013_bike_hrm_smoothed.csv";
   //
-  private static final String OUT_PREFIX = "data/castanet/work/bike_hrm_200_300_";
+  private static final String OUT_PREFIX = "data/castanet/work/bike_hrm_2D_50_400_";
 
   // global variable for Hilbert curves data
   //
