@@ -32,11 +32,11 @@ import edu.hawaii.jmotif.hilbert.util.MercatorFactory;
 public class PauAnomaly {
 
   // define default zoom level
-  private final static double ZOOM_LEVEL = 8.;
+  private final static double ZOOM_LEVEL = 10.;
 
   private static final int HILBERT_CURVE_LEVEL = 8;
 
-  private static final double HILBERT_CURVE_SIZE = 499.;
+  private static final double HILBERT_CURVE_SIZE = 639.;
 
   private static final double GPX_POINT_RADIUS = 1;
 
@@ -46,7 +46,7 @@ public class PauAnomaly {
   // cornflowerblue
   private static final Color GPX_PATH_COLOR = new Color(255, 64, 64);
 
-  private static final String STATIC_MAP_FILENAME = "data/TLS2Pau/staticmap_zoom8.png";
+  private static final String STATIC_MAP_FILENAME = "data/TLS2Pau/staticmap_zoom10.png";
 
   private static final String PATH_FILENAME = "data/TLS2Pau/transform_anomaly2.csv";
 
@@ -63,7 +63,7 @@ public class PauAnomaly {
 
     // center point of the generated map
     //
-    Point2D.Double staticMapCenterLatLng = new Point2D.Double(43.3068, 0.5705);
+    Point2D.Double staticMapCenterLatLng = new Point2D.Double(43.101017,0.383682);
 
     // and its location on 256x256 mercator map
     //
