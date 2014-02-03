@@ -1,4 +1,4 @@
-package edu.hawaii.jmotif.hilbert.tinker;
+package edu.hawaii.jmotif.hilbert.util;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;

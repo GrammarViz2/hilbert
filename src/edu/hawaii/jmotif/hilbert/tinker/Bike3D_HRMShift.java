@@ -29,6 +29,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import com.google.uzaygezen.core.BitVector;
 import com.google.uzaygezen.core.BitVectorFactories;
 import com.google.uzaygezen.core.CompactHilbertCurve;
+import edu.hawaii.jmotif.hilbert.util.MercatorFactory;
 
 public class Bike3D_HRMShift {
 
