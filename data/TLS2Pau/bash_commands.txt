@@ -1,9 +1,11 @@
+
 gpsbabel -D 5 -i gpx -f transform2.gpx -x transform,wpt=trk -x radius,lat=43.101017,lon=0.383682,distance=30K,nosort -x nuketypes,tracks -o gpx -F transform4.gpx
 
 psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f 1.gpx -x track,faketime=f19700101000001+1  -x track,faketime=19700101000001 -x track,start=19700101000000 -x interpolate,distance=0.1k -x track,speed,course -o gpx -F part1.gpx
 psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f 2.gpx -x track,faketime=f19700201000001+1  -x track,faketime=19700201000001 -x track,start=19700201000000 -x interpolate,distance=0.1k -x track,speed,course -o gpx -F part2.gpx
 psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f 3.gpx -x track,faketime=f19700301000001+1  -x track,faketime=19700301000001 -x track,start=19700301000000 -x interpolate,distance=0.1k -x track,speed,course -o gpx -F part3.gpx
-psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -t -i gpx -f part1.gpx -i gpx -f part2.gpx -i gpx -f part3.gpx -x track,merge,title="Anomaly" -o gpx -F anomaly.gpx
+psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f part1.gpx -i gpx -f part2.gpx -i gpx -f part3.gpx -x track,merge,title="Anomaly" -o gpx -F anomaly.gpx
 psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f anomaly.gpx -x track,faketime=f19700101000001+1  -x track,faketime=19700101000001 -x track,start=19700101000000 -x interpolate,distance=0.1k -x track,speed,course -o gpx -F anomaly2.gpx
-psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f anomaly2.gpx -x interpolate,distance=0.1k -x track,speed,course -o gpx -F anomaly3.gpxpsenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f anomaly2.gpx -x interpolate,distance=0.01k -o gpx -F anomaly3.gpx
+psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f anomaly2.gpx -x interpolate,distance=0.1k -x track,speed,course -o gpx -F anomaly3.gpx
+psenin@T135:~/git/hilbert/data/TLS2Pau$ gpsbabel -i gpx -f anomaly2.gpx -x interpolate,distance=0.01k -o gpx -F anomaly3.gpx
 
