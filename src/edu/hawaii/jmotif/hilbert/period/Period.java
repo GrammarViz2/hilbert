@@ -47,11 +47,11 @@ public class Period {
   private static final Color GPX_PATH_COLOR = new Color(255, 64, 64);
 
   // http://maps.googleapis.com/maps/api/staticmap?center=43.5204,1.5044&zoom=15&size=640x640&sensor=false
-  private static final String STATIC_MAP_FILENAME = "data/period/staticmap_zoom15.png";
+  private static final String STATIC_MAP_FILENAME = "data/period/maps/staticmap_zoom15.png";
 
-  private static final String PATH_FILENAME = "data/period/period.csv";
+  private static final String PATH_FILENAME = "data/period/period_pruned.csv";
 
-  private static final String OUTPUT_PREFIX = "data/period/period";
+  private static final String OUTPUT_PREFIX = "data/period/period_pruned";
 
   // the global variable which keeps the resulting from transform timeseries
   private static ArrayList<Double> hilbertTS;
