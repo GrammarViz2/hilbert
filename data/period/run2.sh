@@ -13,3 +13,6 @@ gpsbabel -D 3 -i gpx -f tmp5.gpx -x track,faketime=f20100201120001+10 -o gpx -F 
 #
 # prune points 
 gpsbabel -D 3 -i gpx -f period.gpx -x position,distance=2m,time=120 -o gpx -F period_pruned.gpx
+#
+#
+gpsbabel -D 3 -i gpx -f period_pruned.gpx -o xcsv,style=seninp.style -F period_pruned.csv
