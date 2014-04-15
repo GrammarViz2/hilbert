@@ -4,12 +4,12 @@ require(grid)
 require(gridExtra)
 #
 args <- commandArgs(TRUE)
-datafname=#args[1]
-"/home/psenin/git/hilbert/data/anomaly/anomaly_pruned_hilbert_curve_4Sequitur.csv"
-coveragefname=#args[2]
-"/home/psenin/git/hilbert/data/anomaly/coverage.txt"
-distancefname=#args[3]
-"/home/psenin/git/hilbert/data/anomaly/distances.txt"
+datafname=args[1]
+#"/home/psenin/git/hilbert/data/anomaly/anomaly_pruned_hilbert_curve_4Sequitur.csv"
+coveragefname=args[2]
+#"/home/psenin/git/hilbert/data/anomaly/coverage.txt"
+distancefname=args[3]
+#"/home/psenin/git/hilbert/data/anomaly/distances.txt"
 print(paste("data file name",datafname))
 print(paste("coverage",coveragefname))
 print(paste("distance",distancefname))

@@ -44,7 +44,7 @@ public class CastanetAnomaly {
   private static final Color HILBERT_CURVE_COLOR = new Color(142, 229, 239);
 
   // cornflowerblue
-  private static final Color GPX_PATH_COLOR = new Color(255, 64, 64);
+  private static final Color GPX_PATH_COLOR = new Color(50, 205, 50);
 
   // http://maps.googleapis.com/maps/api/staticmap?center=43.5204,1.5044&zoom=15&size=640x640&sensor=false
   private static final String STATIC_MAP_FILENAME = "data/period/maps/staticmap_zoom15.png";
@@ -87,7 +87,8 @@ public class CastanetAnomaly {
     Graphics graphics = staticMap.getGraphics();
     graphics.setColor(GPX_PATH_COLOR);
 
-    for (Point2D.Double p : runningPath) {
+    for (int i = 0; i < runningPath.size(); i++) {
+      Point2D.Double p = runningPath.get(i);
       // current LatLNg point to X,Y coordinates of 256px MERCATOR map
       Point2D point = MercatorFactory.fromLatLngToPoint(p);
       // adjust X and Y according to the current ZOOM level
@@ -111,6 +112,8 @@ public class CastanetAnomaly {
       Shape theCircle = new Ellipse2D.Double(x - GPX_POINT_RADIUS, y - GPX_POINT_RADIUS,
           2.0 * GPX_POINT_RADIUS, 2.0 * GPX_POINT_RADIUS);
       ((Graphics2D) graphics).draw(theCircle);
+
+      graphics.setColor(GPX_PATH_COLOR);
     }
 
     // save the map with path
