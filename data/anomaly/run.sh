@@ -59,4 +59,9 @@ gpsbabel -D 3 -i xcsv,style=anomaly.style -f anomaly_00.csv -x track,pack,title=
 #
 #psenin@T135:~/git/hilbert/data/anomaly$ sed -n 6536,6923p anomaly_pruned.csv >anomaly_02.csv
 #psenin@T135:~/git/hilbert/data/anomaly$ gpsbabel -D 3 -i xcsv,style=anomaly.style -f anomaly_02.csv -x track,pack,title="Anomaly02" -x transform,trk=wpt,del -o gpx -o gpx -F anomaly_02.gpx
-
+sed -n 14170,14563p anomaly_pruned.csv >anomaly_03.csv
+gpsbabel -D 3 -i xcsv,style=anomaly.style -f anomaly_03.csv -x track,pack,title="Anomaly03" -x transform,trk=wpt,del -o gpx -o gpx -F anomaly_03.gpx
+sed -n 10987,11347p anomaly_pruned.csv >anomaly_04.csv
+gpsbabel -D 3 -i xcsv,style=anomaly.style -f anomaly_04.csv -x track,pack,title="Anomaly04" -x transform,trk=wpt,del -o gpx -o gpx -F anomaly_04.gpx
+sed -n 7055,7414p anomaly_pruned.csv >anomaly_05.csv
+gpsbabel -D 3 -i xcsv,style=anomaly.style -f anomaly_05.csv -x track,pack,title="Anomaly05" -x transform,trk=wpt,del -o gpx -o gpx -F anomaly_05.gpx
