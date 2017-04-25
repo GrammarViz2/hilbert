@@ -1,0 +1,27 @@
+#
+# FILE LAYOUT DEFINITIIONS:
+#
+# gpsbabel -i gpx -f /media/FC73-BC65/parts1.gpx -x interpolate,time=1 -x track,speed,course -o gpx -F 12_6_2013_bike_turns.gpx
+# gpsbabel -i gpx -f 12_6_2013_bike_turns.gpx -x track,speed,course -o xcsv,style=seninp.style -F 11_2_2013_bike_hrm.csv
+# cat 12_6_2013_bike_turns.gpx | grep "course" | sed 's/<course>//g' | sed 's/<\/course>//g' | sed 's/ //g' > 11_2_2013_bike_hrm.course
+#
+#
+# gpsbabel -i gpx -f Track_Anomaly.gpx -x track,faketime=f19700101000001+1  -x track,faketime=19700101000001 -x track,start=19700101000000 
+#   -x track,move=+10s -x track,speed,course,distance -o gpx -F Track_Anomaly_Processed.gpx
+# gpsbabel -i gpx -f Track_Anomaly_Processed.gpx -x interpolate,distance=0.1k -o gpx -F Track_Anomaly_Processed2.gpx
+#
+#
+#
+FIELD_DELIMITER ,
+RECORD_DELIMITER NEWLINE
+BADCHARS ,"
+
+#
+# INDIVIDUAL DATA FIELDS, IN ORDER OF APPEARANCE:
+# NOTE: MS S&T ONLY IMPORTS DATA, IT DOESN'T 
+# EXPORT THIS ANYWHERE SO WE CAN HAVE OUR 
+# WAY WITH THE FORMATTING. 
+#
+IFIELD LAT_DECIMAL, "", "%f" # Latitude
+IFIELD LON_DECIMAL, "", "%f" # Longitude
+IFIELD PATH_DISTANCE_KM,"","%f"
